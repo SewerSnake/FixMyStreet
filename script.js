@@ -18,7 +18,6 @@ function getJSON() {
       var reportsPerCategory = objectCreation(reports);
 
       createTable(reportsPerCategory);
-
     });
 }
 
@@ -85,22 +84,10 @@ function createTable(reportsPerCategory) {
 
 function changeRowColor(tr) {
   tr.addEventListener('mouseover', function(event) {
-    event.target.style.backgroundColor = 'green';
-
-    if (event.target.nextSibling != undefined) {
-      event.target.nextSibling.style.backgroundColor = 'green';
-    } else if (event.target.previousSibling != undefined) {
-      event.target.previousSibling.style.backgroundColor = 'green';
-    }
+    event.target.parentElement.style.backgroundColor = 'green';
   });
 
   tr.addEventListener('mouseout', function(event) {
-    event.target.style.backgroundColor = 'white';
-
-    if (event.target.nextSibling != undefined) {
-      event.target.nextSibling.style.backgroundColor = 'white';
-    } else if (event.target.previousSibling != undefined) {
-      event.target.previousSibling.style.backgroundColor = 'white';
-    }
+    event.target.parentElement.style.backgroundColor = 'white';
   });
 }
