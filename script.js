@@ -56,14 +56,16 @@ function createTable(reportsPerCategory) {
 
   table.appendChild(tr);
 
-  var text;
+  var tr;
   var td1;
   var td2;
+  var report;
+  var text;
 
   for (var i = 0; i < reportsPerCategory.length; i++) {
-    var report = reportsPerCategory[i];
+    report = reportsPerCategory[i];
 
-    var tr = document.createElement('tr');
+    tr = document.createElement('tr');
     changeRowColor(tr);
 
     td1 = document.createElement('td');
