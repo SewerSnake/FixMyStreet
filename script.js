@@ -1,5 +1,7 @@
 var url = 'https://www.fixmystreet.com/open311/v2/requests.json?jurisdiction_id=fixmystreet.com&agency_responsible=2514&start_date=2018-04-01&end_date=2018-04-30'
 
+var NAME = "service_name";
+
 addEventListener('load', function() {
   getJSON();
 
@@ -15,8 +17,6 @@ function getJSON() {
 
       var reportsPerCategory = objectCreation(reports);
 
-      //console.log(reportsPerCategory);
-
       createTable(reportsPerCategory);
 
     });
@@ -28,12 +28,12 @@ function objectCreation(reports) {
   for (var i = 0; i < reports.length; i++) {
     var report = reports[i];
 
-    if (reportsPerCategory[report["service_name"]] == undefined) {
-      reportsPerCategory[report["service_name"]] = "1";
+    if (reportsPerCategory[report[NAME]] == undefined) {
+      reportsPerCategory[report[NAME]] = "1";
     } else {
-      var currentAmount = parseInt(reportsPerCategory[report["service_name"]]);
+      var currentAmount = parseInt(reportsPerCategory[report[NAME]]);
       currentAmount = currentAmount + 1;
-      reportsPerCategory[report["service_name"]] = currentAmount.toString();
+      reportsPerCategory[report[NAME]] = currentAmount.toString();
     }
   }
 
@@ -65,6 +65,7 @@ function createTable(reportsPerCategory) {
     var report = reportsPerCategory[i];
 
     var tr = document.createElement('tr');
+    changeRowColor(tr);
 
     td1 = document.createElement('td');
     text = report[0];
@@ -80,4 +81,26 @@ function createTable(reportsPerCategory) {
   }
 
   document.body.appendChild(table);
+}
+
+function changeRowColor(tr) {
+  tr.addEventListener('mouseover', function(event) {
+    event.target.style.backgroundColor = 'green';
+
+    if (event.target.nextSibling != undefined) {
+      event.target.nextSibling.style.backgroundColor = 'green';
+    } else if (event.target.previousSibling != undefined) {
+      event.target.previousSibling.style.backgroundColor = 'green';
+    }
+  });
+
+  tr.addEventListener('mouseout', function(event) {
+    event.target.style.backgroundColor = 'white';
+
+    if (event.target.nextSibling != undefined) {
+      event.target.nextSibling.style.backgroundColor = 'white';
+    } else if (event.target.previousSibling != undefined) {
+      event.target.previousSibling.style.backgroundColor = 'white';
+    }
+  });
 }
