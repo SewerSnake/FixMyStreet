@@ -1,0 +1,83 @@
+var url = 'https://www.fixmystreet.com/open311/v2/requests.json?jurisdiction_id=fixmystreet.com&agency_responsible=2514&start_date=2018-04-01&end_date=2018-04-30'
+
+addEventListener('load', function() {
+  getJSON();
+
+});
+
+function getJSON() {
+  fetch(url)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(result) {
+      var reports = result.requests[0].request;
+
+      var reportsPerCategory = objectCreation(reports);
+
+      //console.log(reportsPerCategory);
+
+      createTable(reportsPerCategory);
+
+    });
+}
+
+function objectCreation(reports) {
+  var reportsPerCategory = {};
+
+  for (var i = 0; i < reports.length; i++) {
+    var report = reports[i];
+
+    if (reportsPerCategory[report["service_name"]] == undefined) {
+      reportsPerCategory[report["service_name"]] = "1";
+    } else {
+      var currentAmount = parseInt(reportsPerCategory[report["service_name"]]);
+      currentAmount = currentAmount + 1;
+      reportsPerCategory[report["service_name"]] = currentAmount.toString();
+    }
+  }
+
+  return Object.entries(reportsPerCategory);
+}
+
+function createTable(reportsPerCategory) {
+
+  var table = document.createElement('table');
+
+  var tr = document.createElement('tr');
+
+  var th1 = document.createElement('th');
+  th1.appendChild(document.createTextNode('Category'));
+
+  var th2 = document.createElement('th');
+  th2.appendChild(document.createTextNode('Amount'));
+
+  tr.appendChild(th1);
+  tr.appendChild(th2);
+
+  table.appendChild(tr);
+
+  var text;
+  var td1;
+  var td2;
+
+  for (var i = 0; i < reportsPerCategory.length; i++) {
+    var report = reportsPerCategory[i];
+
+    var tr = document.createElement('tr');
+
+    td1 = document.createElement('td');
+    text = report[0];
+    td1.appendChild(document.createTextNode(text));
+
+    td2 = document.createElement('td');
+    text = report[1];
+    td2.appendChild(document.createTextNode(text));
+
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    table.appendChild(tr);
+  }
+
+  document.body.appendChild(table);
+}
