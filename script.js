@@ -4,7 +4,6 @@ var NAME = "service_name";
 
 addEventListener('load', function() {
   getJSON();
-
 });
 
 function getJSON() {
@@ -16,8 +15,10 @@ function getJSON() {
       var reports = result.requests[0].request;
 
       var reportsPerCategory = objectCreation(reports);
-
+      //console.log(reportsPerCategory);
       createTable(reportsPerCategory);
+
+      createStapleDiagram(reportsPerCategory);
     });
 }
 
@@ -32,7 +33,7 @@ function objectCreation(reports) {
     } else {
       var currentAmount = parseInt(reportsPerCategory[report[NAME]]);
       currentAmount = currentAmount + 1;
-      reportsPerCategory[report[NAME]] = currentAmount.toString();
+      reportsPerCategory[report[NAME]] = currentAmount;
     }
   }
 
@@ -92,4 +93,52 @@ function changeRowColor(tr) {
   tr.addEventListener('mouseout', function(event) {
     event.target.parentElement.style.backgroundColor = 'white';
   });
+}
+
+function createStapleDiagram(reportsPerCategory) {
+  var width = 1200;
+  var height = 400;
+
+  var xScale = d3.scaleLinear();
+  xScale.domain([0, reportsPerCategory.length]);
+  xScale.range([0, width]);
+
+  var yScale = d3.scaleLinear();
+  yScale.domain([0, d3.max(reportsPerCategory)]);
+  yScale.range([0, height]);
+
+  d3.select('#table')
+    .append('svg')
+    .attr('height', width)
+    .attr('width', height)
+    .selectAll('g')
+    .data(reportsPerCategory)
+    .enter()
+    .append('g')
+    .call(function(g) {
+      g.append('rect')
+        .attr('fill', 'red')
+        .attr('width', width / reportsPerCategory.length - 5)
+        .attr('height', function(value, index) {
+          console.log(value[1]);
+          return height - yScale(value[1]);
+        })
+        .attr('x', function(value, index) {
+          return xScale(index);
+        })
+        .attr('y', function(value, index) {
+          return yScale(value[1]);
+        });
+      g.append('text')
+        .attr('x', function(value, index) {
+          return xScale(index);
+        })
+        .attr('y', 390)
+        .attr('font-family', 'helvetica')
+        .attr('font-size', '10')
+        .text(function(value) {
+          return value[0];
+        });
+      return g;
+    })
 }
