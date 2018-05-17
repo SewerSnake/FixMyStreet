@@ -2,6 +2,8 @@ var url = 'https://www.fixmystreet.com/open311/v2/requests.json?jurisdiction_id=
 
 var NAME = "service_name";
 
+//var reportsPerCategory = {};
+
 addEventListener('load', function() {
   getJSON();
 });
@@ -29,7 +31,7 @@ function objectCreation(reports) {
     var report = reports[i];
 
     if (reportsPerCategory[report[NAME]] == undefined) {
-      reportsPerCategory[report[NAME]] = "1";
+      reportsPerCategory[report[NAME]] = 1;
     } else {
       var currentAmount = parseInt(reportsPerCategory[report[NAME]]);
       currentAmount = currentAmount + 1;
@@ -96,49 +98,46 @@ function changeRowColor(tr) {
 }
 
 function createStapleDiagram(reportsPerCategory) {
-  var width = 1200;
-  var height = 400;
+  var width = 600;
+  var height = 200;
 
   var xScale = d3.scaleLinear();
   xScale.domain([0, reportsPerCategory.length]);
   xScale.range([0, width]);
 
+  var mappedProblems = reportsPerCategory.map(function(value) {
+    return value[0];
+  });
+
+  var mappedValues = reportsPerCategory.map(function(value) {
+    return value[1];
+  });
+
   var yScale = d3.scaleLinear();
-  yScale.domain([0, d3.max(reportsPerCategory)]);
+  yScale.domain([0, d3.max(mappedValues)]);
   yScale.range([0, height]);
 
   d3.select('#table')
     .append('svg')
-    .attr('height', width)
-    .attr('width', height)
+    .attr('height', height)
+    .attr('width', width)
     .selectAll('g')
-    .data(reportsPerCategory)
+    .data(mappedValues)
     .enter()
     .append('g')
     .call(function(g) {
       g.append('rect')
         .attr('fill', 'red')
-        .attr('width', width / reportsPerCategory.length - 5)
+        .attr('width', width / mappedValues.length - 5)
         .attr('height', function(value, index) {
-          console.log(value[1]);
-          return height - yScale(value[1]);
+          return height - yScale(value);
         })
         .attr('x', function(value, index) {
           return xScale(index);
         })
         .attr('y', function(value, index) {
-          return yScale(value[1]);
-        });
-      g.append('text')
-        .attr('x', function(value, index) {
-          return xScale(index);
-        })
-        .attr('y', 390)
-        .attr('font-family', 'helvetica')
-        .attr('font-size', '10')
-        .text(function(value) {
-          return value[0];
+          return yScale(value);
         });
       return g;
-    })
+    });
 }
