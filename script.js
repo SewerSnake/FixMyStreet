@@ -2,8 +2,6 @@ var url = 'https://www.fixmystreet.com/open311/v2/requests.json?jurisdiction_id=
 
 var NAME = "service_name";
 
-//var reportsPerCategory = {};
-
 addEventListener('load', function() {
   getJSON();
 });
@@ -17,7 +15,7 @@ function getJSON() {
       var reports = result.requests[0].request;
 
       var reportsPerCategory = objectCreation(reports);
-      //console.log(reportsPerCategory);
+
       createTable(reportsPerCategory);
 
       createStapleDiagram(reportsPerCategory);
@@ -103,7 +101,7 @@ function createStapleDiagram(reportsPerCategory) {
 
   var xScale = d3.scaleLinear();
   xScale.domain([0, reportsPerCategory.length]);
-  xScale.range([0, width]);
+  xScale.range([30, width]);
 
   var mappedProblems = reportsPerCategory.map(function(value) {
     return value[0];
@@ -115,7 +113,7 @@ function createStapleDiagram(reportsPerCategory) {
 
   var yScale = d3.scaleLinear();
   yScale.domain([0, d3.max(mappedValues)]);
-  yScale.range([0, height]);
+  yScale.range([height - 40, 0]);
 
   d3.select('#table')
     .append('svg')
@@ -130,14 +128,18 @@ function createStapleDiagram(reportsPerCategory) {
         .attr('fill', 'red')
         .attr('width', width / mappedValues.length - 5)
         .attr('height', function(value, index) {
-          return height - yScale(value);
+          return height - 20 - yScale(value);
         })
         .attr('x', function(value, index) {
           return xScale(index);
         })
         .attr('y', function(value, index) {
-          return yScale(value);
+          return yScale(value) - 20;
         });
       return g;
     });
+
+  var yAxis = d3.axisLeft().scale(yScale);
+
+  d3.select('svg').append('g').attr('transform', 'translate(25, 0)').call(yAxis);
 }
