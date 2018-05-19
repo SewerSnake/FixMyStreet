@@ -144,12 +144,6 @@ function createStapleDiagram(reportsPerCategory) {
         .attr('y', function(value, index) {
           return yScale(value) - 20;
         });
-      .append('g')
-        .attr('transform', 'translate(0, 385)')
-        .call(xAxis)
-        .selectAll('text')
-        .attr("transform", "rotate(-45)")
-        .attr('text-anchor', 'end');
       return g;
     });
   svg.selectAll('g')
@@ -175,7 +169,15 @@ function createStapleDiagram(reportsPerCategory) {
         });
     });
 
-  var yAxis = d3.axisLeft().scale(yScale);
+  svg.append('g')
+    .attr('transform', 'translate(25, 0)')
+    .call(yAxis);
 
-  d3.select('svg').append('g').attr('transform', 'translate(25, 0)').call(yAxis);
+  svg.append('g')
+    .append('g')
+    .attr('transform', 'translate(0, 385)')
+    .call(xAxis)
+    .selectAll('text')
+    .attr("transform", "rotate(-45)")
+    .attr('text-anchor', 'end');
 }
