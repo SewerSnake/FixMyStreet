@@ -96,8 +96,12 @@ function changeRowColor(tr) {
 }
 
 function createStapleDiagram(reportsPerCategory) {
-  var width = 600;
-  var height = 200;
+  var width = 1200;
+  var height = 400;
+
+  var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
   var xScale = d3.scaleLinear();
   xScale.domain([0, reportsPerCategory.length]);
@@ -122,9 +126,11 @@ function createStapleDiagram(reportsPerCategory) {
   yScale.domain([0, d3.max(mappedValues)]);
   yScale.range([height - 40, 0]);
 
+  var yAxis = d3.axisLeft().scale(yScale);
+
   var svg = d3.select('#table')
     .append('svg')
-    .attr('height', height)
+    .attr('height', height + 70)
     .attr('width', width);
 
   svg.selectAll('g')
@@ -143,30 +149,21 @@ function createStapleDiagram(reportsPerCategory) {
         })
         .attr('y', function(value, index) {
           return yScale(value) - 20;
+        })
+        .on("mouseover", function(event) {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltip.html(event)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(event) {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
         });
       return g;
-    });
-  svg.selectAll('g')
-    .data(mappedProblems)
-    .enter()
-    .append('g')
-    .call(function(g) {
-      g.append('text')
-        .attr('x', function(value, index) {
-          return xScale(index);
-        })
-        .attr('y', function(value, index) {
-          return height - 10;
-        })
-        .attr('font-family', 'helvetica')
-        .attr('font-size', '7')
-        .text(function(value) {
-          return value;
-        })
-        .attr('text-anchor', 'middle')
-        .attr('transform', function(d) {
-          return 'rotate(-90)';
-        });
     });
 
   svg.append('g')
@@ -174,8 +171,7 @@ function createStapleDiagram(reportsPerCategory) {
     .call(yAxis);
 
   svg.append('g')
-    .append('g')
-    .attr('transform', 'translate(0, 385)')
+    .attr('transform', 'translate(0,' + 360 + ')')
     .call(xAxis)
     .selectAll('text')
     .attr("transform", "rotate(-45)")
