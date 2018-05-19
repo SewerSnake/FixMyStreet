@@ -107,6 +107,13 @@ function createStapleDiagram(reportsPerCategory) {
     return value[0];
   });
 
+  var xAxis = d3.axisBottom()
+    .scale(xScale)
+    .ticks(mappedProblems.length)
+    .tickFormat(function(value, index) {
+      return mappedProblems[index];
+    });
+
   var mappedValues = reportsPerCategory.map(function(value) {
     return value[1];
   });
@@ -136,22 +143,39 @@ function createStapleDiagram(reportsPerCategory) {
         .attr('y', function(value, index) {
           return yScale(value) - 20;
         });
+      return g;
+    });
+  .selectAll('g')
+    .data(mappedProblems)
+    .enter()
+    .append('g')
+    .call(function(g) {
       g.append('text')
         .attr('x', function(value, index) {
-          return index * 60;
+          return xScale(index);
         })
-        .attr('y', height)
+        .attr('y', function(value, index) {
+          return height - 10;
+        })
         .attr('font-family', 'helvetica')
-        .attr('font-size', '9')
+        .attr('font-size', '7')
         .text(function(value) {
-          return mappedProblems;
+          return value;
         })
         .attr('text-anchor', 'middle')
         .attr('transform', function(d) {
           return 'rotate(-90)';
         });
-      return g;
     });
+
+  d3.select('#table')
+    .append('g')
+    .append('g')
+    .attr('transform', 'translate(0, 385)')
+    .call(xAxis)
+    .selectAll('text')
+    .attr("transform", "rotate(-45)")
+    .attr('text-anchor', 'end');
 
   var yAxis = d3.axisLeft().scale(yScale);
 
