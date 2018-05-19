@@ -99,7 +99,8 @@ function createStapleDiagram(reportsPerCategory) {
   var width = 1200;
   var height = 400;
 
-  var tooltip = d3.select("body").append("div")
+  var tooltip = d3.select("body")
+    .append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
