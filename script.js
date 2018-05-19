@@ -172,7 +172,7 @@ function createStapleDiagram(reportsPerCategory) {
     .call(yAxis);
 
   svg.append('g')
-    .attr('transform', 'translate(0,' + 360 + ')')
+    .attr('transform', 'translate(0,' + (height - 40) + ')')
     .call(xAxis)
     .selectAll('text')
     .attr("transform", "rotate(-45)")
