@@ -122,11 +122,12 @@ function createStapleDiagram(reportsPerCategory) {
   yScale.domain([0, d3.max(mappedValues)]);
   yScale.range([height - 40, 0]);
 
-  d3.select('#table')
+  var svg = d3.select('#table')
     .append('svg')
     .attr('height', height)
-    .attr('width', width)
-    .selectAll('g')
+    .attr('width', width);
+
+  svg.selectAll('g')
     .data(mappedValues)
     .enter()
     .append('g')
@@ -143,9 +144,15 @@ function createStapleDiagram(reportsPerCategory) {
         .attr('y', function(value, index) {
           return yScale(value) - 20;
         });
+      .append('g')
+        .attr('transform', 'translate(0, 385)')
+        .call(xAxis)
+        .selectAll('text')
+        .attr("transform", "rotate(-45)")
+        .attr('text-anchor', 'end');
       return g;
     });
-  .selectAll('g')
+  svg.selectAll('g')
     .data(mappedProblems)
     .enter()
     .append('g')
@@ -167,15 +174,6 @@ function createStapleDiagram(reportsPerCategory) {
           return 'rotate(-90)';
         });
     });
-
-  d3.select('#table')
-    .append('g')
-    .append('g')
-    .attr('transform', 'translate(0, 385)')
-    .call(xAxis)
-    .selectAll('text')
-    .attr("transform", "rotate(-45)")
-    .attr('text-anchor', 'end');
 
   var yAxis = d3.axisLeft().scale(yScale);
 
