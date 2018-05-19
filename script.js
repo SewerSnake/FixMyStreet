@@ -136,6 +136,20 @@ function createStapleDiagram(reportsPerCategory) {
         .attr('y', function(value, index) {
           return yScale(value) - 20;
         });
+      g.append('text')
+        .attr('x', function(value, index) {
+          return index * 60;
+        })
+        .attr('y', height)
+        .attr('font-family', 'helvetica')
+        .attr('font-size', '9')
+        .text(function(value) {
+          return mappedProblems;
+        })
+        .attr('text-anchor', 'middle')
+        .attr('transform', function(d) {
+          return 'rotate(-90)';
+        });
       return g;
     });
 
