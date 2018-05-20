@@ -3,8 +3,14 @@ var url = 'https://www.fixmystreet.com/open311/v2/requests.json?jurisdiction_id=
 var NAME = "service_name";
 
 addEventListener('load', function() {
-  getJSON();
+  if (getFileName() == 'FixMyStreet.html') {
+    getJSON();
+  }
 });
+
+function getFileName() {
+  return location.href.split("/").slice(-1);;
+}
 
 function getJSON() {
   fetch(url)
@@ -16,12 +22,11 @@ function getJSON() {
 
       var reportsPerCategory = objectCreation(reports);
 
-      var fileName = location.href.split("/").slice(-1);
-
-      if (fileName == 'FixMyStreet.html') {
+      if (getFileName() == 'FixMyStreet.html') {
         createTable(reportsPerCategory);
+
         createStapleDiagram(reportsPerCategory);
-      } else if (fileName == '3DData.html') {
+      } else if (getFileName() == '3DData.html') {
         make3DStapleDiagram(reportsPerCategory);
       }
     });
