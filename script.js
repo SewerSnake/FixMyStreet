@@ -9,7 +9,7 @@ addEventListener('load', function() {
 });
 
 function getFileName() {
-  return location.href.split("/").slice(-1);;
+  return location.href.split("/").slice(-1);
 }
 
 function getJSON() {
@@ -203,7 +203,8 @@ function make3DStapleDiagram(reports) {
     return value[1];
   });
 
-  // y-axeln skalas
+  // y-axeln skalas, med maximalvärdet
+  // 100.
   var yScale = d3.scale.linear()
     .domain([0, d3.max(mappedValues)])
     .range([0, 3]);
@@ -264,7 +265,7 @@ function make3DStapleDiagram(reports) {
           metalness: 0.8,
           opacity: .9
         });
-      // Skapar en text i a-text elementet som redogör för både
+      // Skapar text i a-text elementet som redogör för både
       // x-och y värdena för den specifika staplen.
       d3.select(this).select("a-text")
         .attr({
@@ -291,7 +292,7 @@ function make3DStapleDiagram(reports) {
           'align': 'center',
           'position': '0 ' + (yScale(data) / 2 + .5) + ' 0',
           'scale': '.01 .01 .01',
-          'value': data
+          'value': ""
         });
     })
 }
