@@ -42,8 +42,8 @@ function objectCreation(reports) {
       reportsPerCategory[report[NAME]] = 1;
     } else {
       var currentAmount = parseInt(reportsPerCategory[report[NAME]]);
-      currentAmount = currentAmount + 1;
-      reportsPerCategory[report[NAME]] = currentAmount;
+      var newAmount = currentAmount + 1;
+      reportsPerCategory[report[NAME]] = newAmount;
     }
   }
 
